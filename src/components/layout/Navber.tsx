@@ -25,9 +25,9 @@ const CustomNavbar = ({
         }
         activeKey={activeKey}
       >
-        <Nav.Item eventKey="2" as={NavLink} href="/profile">
+        {/* <Nav.Item eventKey="2" as={NavLink} href="/profile">
           Profile
-        </Nav.Item>
+        </Nav.Item> */}
         <Nav.Item eventKey="3" as={NavLink} href="/journal">
           Dashboard
         </Nav.Item>

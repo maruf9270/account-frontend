@@ -87,7 +87,7 @@ function INcomeStatement() {
           </div>
         </div>
         <button
-          onClick={() => generateIncomeStatementPdf()}
+          onClick={() => generateIncomeStatementPdf(incomeStatementData?.data)}
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
         >
           <Printer size={20} />
@@ -184,7 +184,9 @@ function INcomeStatement() {
               {/* Net Income */}
               <tr className="bg-green-50 font-bold">
                 <td colSpan={3} className="px-6 py-4 text-right">
-                  NET INCOME/LOSS
+                  {incomeStatementData?.data?.netIncome > 0
+                    ? "NET INCOME"
+                    : "NET LOSS"}
                 </td>
                 <td className="px-6 py-4 text-right">
                   {" "}

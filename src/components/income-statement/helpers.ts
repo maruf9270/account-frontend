@@ -3,29 +3,13 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import { TDocumentDefinitions } from "pdfmake/interfaces";
 
 pdfMake.vfs = pdfFonts.vfs;
-export const generateIncomeStatementPdf = () => {
-  const incomeStatementData = {
-    totalRevenue: 1000,
-    totalExpenses: -200,
-    netIncome: 800,
-    revenueAccounts: [
-      {
-        accountId: "67c23c18edf15adde7689f25",
-        accountName: "Income",
-        accountType: "income",
-        amount: 1000,
-      },
-    ],
-    expenseAccounts: [
-      {
-        accountId: "67c228ba88672c446e8dbd7f",
-        accountName: "Sellery",
-        accountType: "expense",
-        amount: -200,
-      },
-    ],
-  };
-
+export const generateIncomeStatementPdf = (incomeStatementData: {
+  totalRevenue: number;
+  totalExpenses: number;
+  netIncome: number;
+  revenueAccounts: [{ accountId: string; accountName: string; amount: number }];
+  expenseAccounts: [{ accountId: string; accountName: string; amount: number }];
+}) => {
   const docDefinition = {
     content: [
       {
@@ -43,11 +27,11 @@ export const generateIncomeStatementPdf = () => {
             ],
             ...incomeStatementData.revenueAccounts.map((account) => [
               account.accountName,
-              `$${account.amount}`,
+              `${account.amount}`,
             ]),
             [
               { text: "Total Revenue", bold: true },
-              `$${incomeStatementData.totalRevenue}`,
+              `${incomeStatementData.totalRevenue}`,
             ],
 
             // Expenses Section with Background Color
@@ -62,12 +46,12 @@ export const generateIncomeStatementPdf = () => {
             ],
             ...incomeStatementData.expenseAccounts.map((account) => [
               account.accountName,
-              `$${account.amount * -1} `,
+              `${account.amount * -1} `,
             ]),
             [
               { text: "Total Expenses", bold: true },
               {
-                text: `$${incomeStatementData.totalExpenses * -1}`,
+                text: `${incomeStatementData.totalExpenses * -1}`,
                 bold: true,
               },
             ],
@@ -77,8 +61,15 @@ export const generateIncomeStatementPdf = () => {
             [{ text: "", colSpan: 2 }, ""], // Empty row for spacing
             [{ text: "", colSpan: 2 }, ""], // Empty row for spacing
             [
-              { text: "Net Income", bold: true, alignment: "right" },
-              `$${incomeStatementData.netIncome}`,
+              {
+                text:
+                  incomeStatementData?.netIncome > 0
+                    ? "Net Income"
+                    : "Net Loss",
+                bold: true,
+                alignment: "right",
+              },
+              `${incomeStatementData.netIncome}`,
             ],
           ],
         },
