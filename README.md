@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 Base Path & NextAuth Setup for Deployment
 
-## Getting Started
+This project uses a **custom base path** (`/ahml`) for deployment instead of the default `/`.
 
-First, run the development server:
+This guide explains the setup for:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- `basePath` and `assetPrefix`
+- Handling static assets and public files
+- Correct configuration for NextAuth.js
+- Important TODOs if the base path ever changes
+
+---
+
+## ➡️ Base Path & Asset Prefix Configuration
+
+In `next.config.js`, set the following:
+
+```javascript
+module.exports = {
+  basePath: "/ahml",
+  assetPrefix: "/ahml",
+  publicRuntimeConfig: {
+    basePath: "/ahml",
+  },
+};
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+✅ This automatically updates:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `<Link>` URLs
+- `next/router` navigations
+- Internal static asset references (CSS, JS)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ➡️ Handling Links and Images
 
-To learn more about Next.js, take a look at the following resources:
+### Links (`<Link>` / `useRouter`)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+No manual update is needed for internal links:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```jsx
+<Link href="/about">About Page</Link>
+```
 
-## Deploy on Vercel
+➡️ Will automatically become:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```html
+<a href="/ahml/about">About Page</a>
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+### Images (`next/image`)
+
+You must **manually prefix** the `src` in `next/image`:
+
+```jsx
+import Image from "next/image";
+
+export default function Home() {
+  return (
+    <Image
+      src="/ahml/me.png"
+      alt="Picture of the author"
+      width={500}
+      height={500}
+    />
+  );
+}
+```
+
+❗Note: This only applies to raw file paths (images, videos, etc.).
+
+---
+
+## ➡️ NextAuth.js Configuration for Base Path
+
+NextAuth.js needs extra configuration when using a base path.
+
+### 1. Set the `NEXTAUTH_URL` Environment Variable
+
+Add the following to your `.env.local` or `.env.production`:
+
+```env
+NEXTAUTH_URL=https://your-domain.com/ahml/api/auth
+```
+
+This ensures NextAuth API routes resolve correctly.
+
+---
+
+### 2. Configure `<SessionProvider>` in `_app.js`
+
+Update `_app.js` to pass the `basePath`:
+
+```jsx
+import { SessionProvider } from "next-auth/react";
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}) {
+  return (
+    <SessionProvider session={session} basePath="/ahml/api/auth">
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
+}
+```
+
+✅ This makes sure NextAuth.js works properly with the new API route under `/ahml/api/auth`.
+
+---
+
+## 📝 Important Notes
+
+- `basePath` must be set **at build time**.
+- Changing the base path **requires a new `next build`**.
+- **Restart** the server after any `.env` or `basePath` changes.
+- **Manually prefix** static file paths (only if using raw HTML tags like `<img>` or `<video>`).
+
+---
+
+## 📋 TODO Checklist if Changing Base Path
+
+| Task                                                    | Required? | Notes                                              |
+| :------------------------------------------------------ | :-------- | :------------------------------------------------- |
+| Update `basePath` and `assetPrefix` in `next.config.js` | ✅        |                                                    |
+| Update `NEXTAUTH_URL` in `.env` files                   | ✅        | Must match the new path                            |
+| Update `SessionProvider` `basePath` prop in `_app.js`   | ✅        |                                                    |
+| Update manual `src` paths for images, videos, etc.      | ⚠️        | Only for raw `<img>`, `<video>`, etc.              |
+| Rebuild with `npm run build`                            | ✅        | After making changes                               |
+| Restart server                                          | ✅        |                                                    |
+| Change .env .env.local nextauth_url with base path      |           | NEXTAUTH_URL=https://your-domain.com/ahml/api/auth |
+
+---
+
+## ✅ Final Deployment Checklist
+
+- [ ] `next.config.js` updated
+- [ ] `.env` updated with new `NEXTAUTH_URL`
+- [ ] `_app.js` updated (`SessionProvider`)
+- [ ] All image/public links tested
+- [ ] Login/logout working via NextAuth
+- [ ] `npm run build` successful
+- [ ] Server restarted
+
+---
+
+# 🚀 Notes
+
+Following this structure ensures smooth deployment under **any sub-path** (`/ahml`, `/docs`, `/app`, etc.) without breaking authentication or static assets.
