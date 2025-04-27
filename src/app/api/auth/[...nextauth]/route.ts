@@ -123,7 +123,7 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: "/ddcg/account/login",
   },
   secret: process.env.AUTH_SECRET,
   session: {

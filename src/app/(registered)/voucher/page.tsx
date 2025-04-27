@@ -14,8 +14,11 @@ import RPagination from "@/components/RPagination";
 import { ENUM_MODE } from "@/enums/EnumMode";
 import { useRouter } from "next/navigation";
 import DeleteButton from "@/components/DeleteWIthDialog";
+import { useSession } from "next-auth/react";
+import { ENUM_USER } from "@/enums/EnumUser";
 
 const VoucherTable = () => {
+  const session = useSession();
   const router = useRouter();
   const { addField, deleteField, query } = useQueryBuilder();
   const { data: voucherData, isLoading: voucherLoading } =
@@ -194,20 +197,27 @@ const VoucherTable = () => {
                           >
                             <Eye size={18} />
                           </button>
-                          <button
-                            className="text-green-600 hover:text-green-900"
-                            onClick={() =>
-                              router.push(
-                                `/voucher/new?mode=${ENUM_MODE.UPDATE}&id=${voucher?._id}`
-                              )
-                            }
-                          >
-                            <Edit size={18} />
-                          </button>
-                          <DeleteButton
-                            deleteApi={useDeleteVoucherMutation}
-                            id={voucher?._id}
-                          />
+                          {session?.data?.user?.role ==
+                          ENUM_USER.SUPER_ADMIN ? (
+                            <>
+                              <button
+                                className="text-green-600 hover:text-green-900"
+                                onClick={() =>
+                                  router.push(
+                                    `/voucher/new?mode=${ENUM_MODE.UPDATE}&id=${voucher?._id}`
+                                  )
+                                }
+                              >
+                                <Edit size={18} />
+                              </button>
+                              <DeleteButton
+                                deleteApi={useDeleteVoucherMutation}
+                                id={voucher?._id}
+                              />
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </div>
                       </td>
                     </tr>

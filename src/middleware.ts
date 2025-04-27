@@ -3,18 +3,18 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import { ENUM_USER } from "./enums/EnumUser";
 export default async function middleware(req: NextRequest) {
+  const basePath = "/ddcg/account";
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (token && req.nextUrl.pathname === "/login") {
-    return NextResponse.redirect(req.nextUrl.origin);
+    return NextResponse.redirect(req.nextUrl.origin + basePath + "/journal");
   }
 
   // Redirection if the user is not authenticated
   if (!token && req.nextUrl.pathname !== "/login") {
-    console.log("1");
-    return NextResponse.redirect(`${req.nextUrl.origin}/login`);
+    return NextResponse.redirect(`${req.nextUrl.origin + basePath}/login`);
   }
-
+  console.log(req.nextUrl.origin);
   // blocking navigation to login page if user is authenticated
 
   const isTokenExpired =
@@ -29,7 +29,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.pathname == "/") {
-    return NextResponse.redirect(`${req.nextUrl.origin}/journal`);
+    return NextResponse.redirect(`${req.nextUrl.origin + basePath}/journal`);
   }
   return NextResponse.next();
 }

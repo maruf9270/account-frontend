@@ -19,6 +19,8 @@ import { NavLink } from "@/components/layout/Navlink";
 import { useRouter } from "next/navigation";
 import { ENUM_MODE } from "@/enums/EnumMode";
 import ButtonProvider from "@/components/ledger-accounts/ButtonProvider";
+import { useSession } from "next-auth/react";
+import { ENUM_USER } from "@/enums/EnumUser";
 
 // Sample data - in a real app this would come from an API/database
 
@@ -31,6 +33,7 @@ function App() {
     isFetching: ledgerFetching,
   } = useGetAllLedgerQuery({ ...query });
 
+  const session = useSession();
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto">
@@ -67,14 +70,18 @@ function App() {
                 />
               </div>
               <div>
-                <Button
-                  appearance="primary"
-                  color="blue"
-                  as={NavLink}
-                  href="/ledger-accounts/new?mode=new"
-                >
-                  Add New
-                </Button>
+                {session?.data?.user?.role == ENUM_USER.SUPER_ADMIN ? (
+                  <Button
+                    appearance="primary"
+                    color="blue"
+                    as={NavLink}
+                    href="/ledger-accounts/new?mode=new"
+                  >
+                    Add New
+                  </Button>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </div>

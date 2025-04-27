@@ -25,10 +25,9 @@ export const generateIncomeStatementPdf = (incomeStatementData: {
               { text: "Revenue", bold: true, fillColor: "#9b9b9b" },
               { text: "Amount", bold: true, fillColor: "#9b9b9b" },
             ],
-            ...incomeStatementData.revenueAccounts.map((account) => [
-              account.accountName,
-              `${account.amount}`,
-            ]),
+            ...incomeStatementData.revenueAccounts
+              .filter((account) => Number(account.amount * -1) !== 0)
+              ?.map((account) => [account.accountName, `${account.amount}`]),
             [
               { text: "Total Revenue", bold: true },
               `${incomeStatementData.totalRevenue}`,
@@ -44,13 +43,11 @@ export const generateIncomeStatementPdf = (incomeStatementData: {
               },
               "",
             ],
-            ...incomeStatementData.expenseAccounts.map((account) => {
-              const amount = account.amount * -1;
-              if (amount == 0) {
-                return;
-              }
-              return [account.accountName, `${account.amount * -1} `];
-            }),
+            ...incomeStatementData.expenseAccounts
+              .filter((account) => Number(account.amount * -1) !== 0)
+              ?.map((account) => {
+                return [account.accountName, `${account.amount * -1} `];
+              }),
             [
               { text: "Total Expenses", bold: true },
               {
@@ -92,6 +89,7 @@ export const generateIncomeStatementPdf = (incomeStatementData: {
     },
   };
 
+  console.log(docDefinition);
   pdfMake.createPdf(docDefinition as unknown as TDocumentDefinitions).open();
 };
 

@@ -11,7 +11,11 @@ import { ENUM_MODE } from "@/enums/EnumMode";
 import { useRouter } from "next/navigation";
 import DeleteButton from "../DeleteWIthDialog";
 import { useDeleteLedgerMutation } from "@/redux/api/ledger-account/ledger-account.api";
+import { useSession } from "next-auth/react";
+import { ENUM_USER } from "@/enums/EnumUser";
+
 const ButtonProvider = ({ id }: { id: string }) => {
+  const session = useSession();
   const deleteQuery = useDeleteLedgerMutation();
   const router = useRouter();
   return (
@@ -24,15 +28,23 @@ const ButtonProvider = ({ id }: { id: string }) => {
       >
         <Eye className="h-5 w-5" />
       </button>
-      <button
-        className="text-green-600 hover:text-green-800"
-        onClick={() =>
-          router.push(`/ledger-accounts/new?id=${id}&mode=${ENUM_MODE.UPDATE}`)
-        }
-      >
-        <Pencil className="h-5 w-5" />
-      </button>
-      <DeleteButton id={id} deleteApi={useDeleteLedgerMutation} />
+      {session?.data?.user?.role == ENUM_USER.SUPER_ADMIN ? (
+        <>
+          <button
+            className="text-green-600 hover:text-green-800"
+            onClick={() =>
+              router.push(
+                `/ledger-accounts/new?id=${id}&mode=${ENUM_MODE.UPDATE}`
+              )
+            }
+          >
+            <Pencil className="h-5 w-5" />
+          </button>
+          <DeleteButton id={id} deleteApi={useDeleteLedgerMutation} />
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

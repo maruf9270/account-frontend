@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import React, { useState, useEffect } from "react";
 import {
   Search,
@@ -22,8 +23,11 @@ import AccountOptionSelector from "./AccountOptionSelector";
 import Link from "next/link";
 import { ENUM_MODE } from "@/enums/EnumMode";
 import DeleteButton from "../DeleteWIthDialog";
+import { useSession } from "next-auth/react";
+import { ENUM_USER } from "@/enums/EnumUser";
 
 function App() {
+  const session = useSession();
   const { addField, deleteField, query } = useQueryBuilder();
 
   //   data source
@@ -240,19 +244,26 @@ function App() {
                                           <Eye className="h-5 w-5" />
                                         </button>
                                       </Link>
-                                      <Link
-                                        href={`/journal/new?mode=${ENUM_MODE.UPDATE}&entryId=${entry?.entryId}`}
-                                      >
-                                        <button className="text-yellow-600 hover:text-yellow-900">
-                                          <Edit className="h-5 w-5" />
-                                        </button>
-                                      </Link>
-                                      <DeleteButton
-                                        id={entry?.entryId}
-                                        deleteApi={
-                                          useDeleteJournalEntryMutation
-                                        }
-                                      />
+                                      {session?.data?.user?.role ==
+                                      ENUM_USER.SUPER_ADMIN ? (
+                                        <>
+                                          <Link
+                                            href={`/journal/new?mode=${ENUM_MODE.UPDATE}&entryId=${entry?.entryId}`}
+                                          >
+                                            <button className="text-yellow-600 hover:text-yellow-900">
+                                              <Edit className="h-5 w-5" />
+                                            </button>
+                                          </Link>
+                                          <DeleteButton
+                                            id={entry?.entryId}
+                                            deleteApi={
+                                              useDeleteJournalEntryMutation
+                                            }
+                                          />
+                                        </>
+                                      ) : (
+                                        <></>
+                                      )}
                                     </div>
                                   )}
                                 </td>

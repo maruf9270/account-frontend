@@ -12,6 +12,7 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import Link from "next/link";
 
 function App() {
   return (
@@ -59,9 +60,11 @@ function App() {
               </a>
             </div>
             <div className="flex items-center">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium">
-                Get Started
-              </button>
+              <Link href={"/login"}>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium">
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -410,7 +413,7 @@ function App() {
                   </div>
                   <div className="ml-3">
                     <p className="text-gray-900 font-medium">Phone</p>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
+                    <p className="text-gray-600">+880 1915 682291</p>
                   </div>
                 </div>
 
@@ -420,7 +423,7 @@ function App() {
                   </div>
                   <div className="ml-3">
                     <p className="text-gray-900 font-medium">Email</p>
-                    <p className="text-gray-600">info@masit.com</p>
+                    <p className="text-gray-600">sarker24@gmail.com</p>
                   </div>
                 </div>
 
@@ -431,9 +434,9 @@ function App() {
                   <div className="ml-3">
                     <p className="text-gray-900 font-medium">Address</p>
                     <p className="text-gray-600">
-                      123 Business Avenue, Suite 500
+                      Mirpur
                       <br />
-                      New York, NY 10001
+                      Dhaka, Bangladesh
                     </p>
                   </div>
                 </div>
