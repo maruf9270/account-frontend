@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: "/ddcg",
-  assetPrefix: "/ddcg",
+  basePath: "/ddcg/account",
+  assetPrefix: "/ddcg/account",
   images: {
     remotePatterns: [
       {

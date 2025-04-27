@@ -4,7 +4,9 @@ import React from "react";
 
 const SessionWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SessionProvider basePath="/ddcg/api/auth">{children}</SessionProvider>
+    <SessionProvider basePath="/ddcg/account/api/auth">
+      {children}
+    </SessionProvider>
   );
 };
 
