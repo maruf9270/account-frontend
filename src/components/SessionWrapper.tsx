@@ -3,7 +3,9 @@ import { SessionProvider } from "next-auth/react";
 import React from "react";
 
 const SessionWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <SessionProvider basePath="/ddcg/api/auth">{children}</SessionProvider>
+  );
 };
 
 export default SessionWrapper;

@@ -44,10 +44,13 @@ export const generateIncomeStatementPdf = (incomeStatementData: {
               },
               "",
             ],
-            ...incomeStatementData.expenseAccounts.map((account) => [
-              account.accountName,
-              `${account.amount * -1} `,
-            ]),
+            ...incomeStatementData.expenseAccounts.map((account) => {
+              const amount = account.amount * -1;
+              if (amount == 0) {
+                return;
+              }
+              return [account.accountName, `${account.amount * -1} `];
+            }),
             [
               { text: "Total Expenses", bold: true },
               {
