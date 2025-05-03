@@ -6,6 +6,8 @@ export default async function middleware(req: NextRequest) {
   const basePath = "/ddcg/account";
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
+  //  redirecting to the base path
+
   if (token && req.nextUrl.pathname === "/login") {
     return NextResponse.redirect(req.nextUrl.origin + basePath + "/journal");
   }
@@ -14,9 +16,17 @@ export default async function middleware(req: NextRequest) {
   if (!token && req.nextUrl.pathname !== "/login") {
     return NextResponse.redirect(`${req.nextUrl.origin + basePath}/login`);
   }
-  console.log(req.nextUrl.origin);
-  // blocking navigation to login page if user is authenticated
 
+  // Redirect if the user is not accoutant or super admin
+
+  if (
+    token &&
+    token?.data?.user?.role !== ENUM_USER.SUPER_ADMIN &&
+    token &&
+    token?.data?.user?.role !== ENUM_USER.ACCOUNTANT
+  ) {
+    return NextResponse.redirect(`${req.nextUrl.origin + basePath}/logout`);
+  }
   const isTokenExpired =
     token && Date.now() >= token?.data?.validity?.refresh_until * 1000;
   console.log(isTokenExpired);
@@ -36,6 +46,6 @@ export default async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|unauthorized|logout).*)",
   ],
 };

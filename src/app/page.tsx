@@ -245,7 +245,7 @@ function App() {
               <h2 className="text-3xl font-bold text-gray-900">
                 Powerful Dashboard
               </h2>
-              <p className="mt-4 text-lg text-gray-600">
+              <p className="mt-4 text-lg text-gray-600 ">
                 Our intuitive dashboard gives you a complete overview of your
                 financial health at a glance. Track income, expenses, and
                 profitability with ease.

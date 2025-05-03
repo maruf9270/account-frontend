@@ -15,6 +15,7 @@ import axios from "axios";
 import config from "@/config";
 import { ENUM_PROVIDER } from "@/enums/ProviderEnum";
 import { jwtDecypherAndUserInfoProvider } from "@/helpers/JWTDeccypherAndInfoProvider";
+import { ENUM_BASEPATH } from "@/enums/ENumBasePath";
 
 async function refreshAccessToken(
   nextAuthJWTCookie: JWT,
@@ -133,7 +134,7 @@ const handler = NextAuth({
     async redirect({ url, baseUrl }) {
       return url.startsWith(baseUrl)
         ? Promise.resolve(url)
-        : Promise.resolve(baseUrl);
+        : Promise.resolve(baseUrl + ENUM_BASEPATH.PATH);
     },
     async jwt({
       token,
@@ -218,9 +219,6 @@ const handler = NextAuth({
       return { ...token, error: "RefreshTokenExpired" } as JWT;
     },
     async session({ session, token, trigger }) {
-      if (trigger == "update") {
-        console.debug("from session");
-      }
       session.user = token.data.user;
       session.validity = token.data.validity;
       session.error = token.error;
