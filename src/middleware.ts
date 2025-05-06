@@ -2,19 +2,20 @@ import { getToken } from "next-auth/jwt";
 
 import { NextRequest, NextResponse } from "next/server";
 import { ENUM_USER } from "./enums/EnumUser";
+import { ENUM_BASEPATH } from "./enums/ENumBasePath";
 export default async function middleware(req: NextRequest) {
-  const basePath = "/ddcg/account";
+  const basePath = ENUM_BASEPATH.PATH;
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   //  redirecting to the base path
 
   if (token && req.nextUrl.pathname === "/login") {
-    return NextResponse.redirect(req.nextUrl.origin + basePath + "/journal");
+    return NextResponse.redirect(req.nextUrl.origin + basePath + "journal");
   }
 
   // Redirection if the user is not authenticated
   if (!token && req.nextUrl.pathname !== "/login") {
-    return NextResponse.redirect(`${req.nextUrl.origin + basePath}/login`);
+    return NextResponse.redirect(`${req.nextUrl.origin + basePath}login`);
   }
 
   // Redirect if the user is not accoutant or super admin
