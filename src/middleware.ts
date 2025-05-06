@@ -12,6 +12,7 @@ export default async function middleware(req: NextRequest) {
   if (token && req.nextUrl.pathname === "/login") {
     return NextResponse.redirect(req.nextUrl.origin + basePath + "journal");
   }
+  console.log(req.nextUrl.origin + basePath);
 
   // Redirection if the user is not authenticated
   if (!token && req.nextUrl.pathname !== "/login") {
@@ -26,7 +27,7 @@ export default async function middleware(req: NextRequest) {
     token &&
     token?.data?.user?.role !== ENUM_USER.ACCOUNTANT
   ) {
-    return NextResponse.redirect(`${req.nextUrl.origin + basePath}/logout`);
+    return NextResponse.redirect(`${req.nextUrl.origin + basePath}logout`);
   }
   const isTokenExpired =
     token && Date.now() >= token?.data?.validity?.refresh_until * 1000;
@@ -40,7 +41,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.pathname == "/") {
-    return NextResponse.redirect(`${req.nextUrl.origin + basePath}/journal`);
+    return NextResponse.redirect(`${req.nextUrl.origin + basePath}journal`);
   }
   return NextResponse.next();
 }
