@@ -6,8 +6,11 @@ import { CustomProvider } from "rsuite";
 import SessionWrapper from "@/components/SessionWrapper";
 import "rsuite/dist/rsuite-no-reset.min.css";
 export const metadata: Metadata = {
-  title: "RMS",
-  description: "Restaurant Management System",
+  title: "HMS-A",
+  description: "Hospital Management System-- Account",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
