@@ -16,7 +16,7 @@ import {
   useGetAllJournalEntriesQuery,
 } from "@/redux/api/journal-entry/journalEntry.api";
 import RPagination from "../RPagination";
-import { SelectPicker } from "rsuite";
+import { DatePicker, SelectPicker } from "rsuite";
 import OptionSelector from "../OptionSelector";
 import useQueryBuilder, { QueryBuilder } from "@/helpers/QueryBUilder";
 import AccountOptionSelector from "./AccountOptionSelector";
@@ -64,13 +64,17 @@ function App() {
                 Start Date
               </label>
               <div className="relative">
-                <input
-                  type="date"
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={query?.from}
-                  onChange={(e) => addField("from", e.target.value)}
+                <DatePicker
+                  className=""
+                  value={new Date(query?.from ?? new Date())}
+                  onChange={(e) =>
+                    addField("from", e?.toISOString().substring(0, 10))
+                  }
+                  oneTap
+                  format="dd/MM/yyyy"
+                  size="lg"
+                  block
                 />
-                <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               </div>
             </div>
 
@@ -79,13 +83,17 @@ function App() {
                 End Date
               </label>
               <div className="relative">
-                <input
-                  type="date"
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={query?.to}
-                  onChange={(e) => addField("to", e.target.value)}
+                <DatePicker
+                  className=""
+                  value={new Date(query?.to ?? new Date())}
+                  onChange={(e) =>
+                    addField("to", e?.toISOString().substring(0, 10))
+                  }
+                  oneTap
+                  format="dd/MM/yyyy"
+                  size="lg"
+                  block
                 />
-                <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               </div>
             </div>
 

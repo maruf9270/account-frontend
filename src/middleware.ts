@@ -25,7 +25,8 @@ export default async function middleware(req: NextRequest) {
     token &&
     token?.data?.user?.role !== ENUM_USER.SUPER_ADMIN &&
     token &&
-    token?.data?.user?.role !== ENUM_USER.ACCOUNTANT
+    token?.data?.user?.role !== ENUM_USER.ACCOUNTANT &&
+    token?.data?.user?.role !== ENUM_USER.ADMIN
   ) {
     return NextResponse.redirect(`${req.nextUrl.origin + basePath}logout`);
   }

@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import DeleteButton from "@/components/DeleteWIthDialog";
 import { useSession } from "next-auth/react";
 import { ENUM_USER } from "@/enums/EnumUser";
+import { DatePicker } from "rsuite";
 
 const VoucherTable = () => {
   const session = useSession();
@@ -69,13 +70,17 @@ const VoucherTable = () => {
               Start Date
             </label>
             <div className="relative">
-              <input
-                type="date"
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={query?.from}
-                onChange={(e) => addField("from", e.target.value)}
+              <DatePicker
+                className=""
+                value={new Date(query?.from ?? new Date())}
+                onChange={(e) =>
+                  addField("from", e?.toISOString().substring(0, 10))
+                }
+                oneTap
+                format="dd/MM/yyyy"
+                size="lg"
+                block
               />
-              <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
           </div>
 
@@ -84,13 +89,17 @@ const VoucherTable = () => {
               End Date
             </label>
             <div className="relative">
-              <input
-                type="date"
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={query?.to}
-                onChange={(e) => addField("to", e.target.value)}
+              <DatePicker
+                className=""
+                value={new Date(query?.to ?? new Date())}
+                onChange={(e) =>
+                  addField("to", e?.toISOString().substring(0, 10))
+                }
+                oneTap
+                format="dd/MM/yyyy"
+                size="lg"
+                block
               />
-              <Calendar className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
           </div>
 

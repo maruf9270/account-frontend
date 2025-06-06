@@ -53,37 +53,42 @@ function INcomeStatement() {
       {/* Controls - hidden when printing */}
       <div className="print:hidden mb-8 flex items-center gap-4 justify-between bg-white p-4 rounded-lg shadow">
         <div className="flex gap-4">
-          <div>
-            <label
-              htmlFor="startDate"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Start Date
             </label>
-            <DatePicker
-              id="startDate"
-              value={new Date(query?.from)}
-              onChange={(e) => addField("from", e)}
-              className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              block
-              oneTap
-            />
+            <div className="relative">
+              <DatePicker
+                className=""
+                value={new Date(query?.from ?? new Date())}
+                onChange={(e) =>
+                  addField("from", e?.toISOString().substring(0, 10))
+                }
+                oneTap
+                format="dd/MM/yyyy"
+                size="lg"
+                block
+              />
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="endDate"
-              className="block text-sm font-medium text-gray-700"
-            >
+
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               End Date
             </label>
-            <DatePicker
-              id="endDate"
-              value={new Date(query?.to)}
-              onChange={(e) => addField("to", e)}
-              className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              block
-              oneTap
-            />
+            <div className="relative">
+              <DatePicker
+                className=""
+                value={new Date(query?.to ?? new Date())}
+                onChange={(e) =>
+                  addField("to", e?.toISOString().substring(0, 10))
+                }
+                oneTap
+                format="dd/MM/yyyy"
+                size="lg"
+                block
+              />
+            </div>
           </div>
         </div>
         <button

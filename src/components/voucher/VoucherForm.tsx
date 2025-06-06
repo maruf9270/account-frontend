@@ -4,7 +4,7 @@ import CalendarIcon from "@rsuite/icons/Calendar";
 import React, { useEffect, useRef, useState } from "react";
 import CreditCardPlusIcon from "@rsuite/icons/CreditCardPlus";
 import { Type, Banknote } from "lucide-react";
-import { DatePicker, Form, SelectPicker, useToaster } from "rsuite";
+import { Button, DatePicker, Form, SelectPicker, useToaster } from "rsuite";
 import TextArea from "@/components/TextArea";
 import AccountOptionSelector from "@/components/journal-entry/AccountOptionSelector";
 import {
@@ -16,6 +16,7 @@ import { BudgetType } from "@/components/journal-entry/journalEntryHelper";
 import {
   useCreateVoucherMutation,
   useLazyGetSingleVoucherQuery,
+  useUpdateVoucherMutation,
 } from "@/redux/api/voucher/voucher.api";
 import Swal from "sweetalert2";
 import { ledgerModel } from "@/components/ledger-accounts/ledgerAccountsHelper";
@@ -35,6 +36,8 @@ const VoucherForm = () => {
     account: "",
     budgetType: "regularBudget",
   } as IVoucher);
+
+  // API Endpoint
   const [post, { isLoading }] = useCreateVoucherMutation();
   const [get, { isLoading: voucherLoading }] = useLazyGetSingleVoucherQuery();
 
@@ -42,6 +45,8 @@ const VoucherForm = () => {
     getLedger,
     { isLoading: singleLedgerLoading, isFetching: singleLedgerFetching },
   ] = useLazyGetSingleLedgerQuery();
+
+  const [update, { isLoading: updateLoading }] = useUpdateVoucherMutation();
   const {
     data: balanceData,
     isLoading: balanceDataLoading,
@@ -54,23 +59,37 @@ const VoucherForm = () => {
     { skip: !formData?.paymentMode }
   );
 
+  // Form SUbmitter
   const handleSubmit = async () => {
     if (!formData.account || !formData.cashOrBankAc || ref?.current?.check()) {
       Swal.fire("Error", "Please Fill out the fields", "error");
       return;
     } else {
       try {
-        const result = await post(formData).unwrap();
+        let result;
+        if (mode == ENUM_MODE.NEW) {
+          result = await post(formData).unwrap();
+        } else if (mode == ENUM_MODE.UPDATE) {
+          result = await update({ data: formData, _id: id }).unwrap();
+        }
+
         if (result?.success) {
-          Swal.fire("Success", "Voucher Created Successfully", "success");
+          Swal.fire(
+            "Success",
+            `Voucher ${
+              mode == ENUM_MODE.UPDATE ? "Updated" : "Created"
+            } Successfully`,
+            "success"
+          );
           router.push(`/voucher`);
         }
       } catch (error) {
-        Swal.fire("Error", "Invalid document", "error");
+        Swal.fire("Error", (error ?? "Invalid Document") as string, "error");
       }
     }
   };
 
+  // Data fetcher for update or view
   useEffect(() => {
     if (mode !== ENUM_MODE.NEW) {
       (async function () {
@@ -242,13 +261,16 @@ const VoucherForm = () => {
 
           {/* Action Buttons */}
           <div className="flex gap-3 pt-4 justify-end">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            <Button
+              appearance="primary"
+              color="blue"
+              className="!px-4 !py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               onClick={() => handleSubmit()}
+              loading={updateLoading || isLoading}
+              disabled={updateLoading || isLoading}
             >
               Save
-            </button>
+            </Button>
 
             {/* <button
               type="button"
