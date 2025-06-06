@@ -34,16 +34,25 @@ const voucherApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: ["all-vouchers"],
+      invalidatesTags: [
+        "all-vouchers",
+        "all-journal-entries",
+        "single-journal-entry",
+      ],
     }),
 
     updateVoucher: build.mutation({
-      query: (options) => ({
-        url: `/voucher/${options.voucherId}`,
+      query: ({ data, _id }) => ({
+        url: `/voucher/${_id}`,
         method: "PATCH",
-        data: options?.data,
+        data: data,
       }),
-      invalidatesTags: ["all-vouchers", "single-voucher"],
+      invalidatesTags: [
+        "all-vouchers",
+        "single-voucher",
+        "all-journal-entries",
+        "single-journal-entry",
+      ],
     }),
 
     deleteVoucher: build.mutation({
@@ -51,7 +60,12 @@ const voucherApi = baseApi.injectEndpoints({
         url: `/voucher/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["all-vouchers", "single-voucher"],
+      invalidatesTags: [
+        "all-vouchers",
+        "single-voucher",
+        "all-journal-entries",
+        "single-journal-entry",
+      ],
     }),
   }),
 });

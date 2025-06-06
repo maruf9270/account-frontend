@@ -7,6 +7,7 @@ import useQueryBuilder from "@/helpers/QueryBUilder";
 import { BalanceSheetGenerator } from "@/components/income-statement/helpers";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { DatePicker } from "rsuite";
 pdfMake.vfs = pdfFonts.vfs;
 function App() {
   // State for date range
@@ -75,37 +76,44 @@ function App() {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className=" mx-auto bg-white shadow-md rounded-lg overflow-hidden">
         {/* Date Selection and Print Button */}
-        <div className="p-4 bg-gray-100 flex flex-wrap items-center justify-between gap-4">
+        <div className="p-4 bg-gray-100 flex flex-wrap items-center justify-between gap-4 w-full">
           <div className="flex flex-wrap gap-4">
-            <div>
-              <label
-                htmlFor="startDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Start Date
               </label>
-              <input
-                type="date"
-                id="startDate"
-                value={query?.from}
-                onChange={(e) => addField("from", e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              />
+              <div className="relative">
+                <DatePicker
+                  className=""
+                  value={new Date(query?.from ?? new Date())}
+                  onChange={(e) =>
+                    addField("from", e?.toISOString().substring(0, 10))
+                  }
+                  oneTap
+                  format="dd/MM/yyyy"
+                  size="lg"
+                  block
+                />
+              </div>
             </div>
-            <div>
-              <label
-                htmlFor="endDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 End Date
               </label>
-              <input
-                type="date"
-                id="endDate"
-                value={query?.to}
-                onChange={(e) => addField("to", e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              />
+              <div className="relative">
+                <DatePicker
+                  className=""
+                  value={new Date(query?.to ?? new Date())}
+                  onChange={(e) =>
+                    addField("to", e?.toISOString().substring(0, 10))
+                  }
+                  oneTap
+                  format="dd/MM/yyyy"
+                  size="lg"
+                  block
+                />
+              </div>
             </div>
           </div>
           <button

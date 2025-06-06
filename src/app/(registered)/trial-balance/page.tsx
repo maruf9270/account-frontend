@@ -73,34 +73,41 @@ function App() {
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1">
-              <label
-                htmlFor="fromDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                From Date
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Start Date
               </label>
-              <DatePicker
-                id="fromDate"
-                value={new Date(query?.from)}
-                onChange={(e) => addField("from", e)}
-                block
-                size="lg"
-              />
+              <div className="relative">
+                <DatePicker
+                  className=""
+                  value={new Date(query?.from ?? new Date())}
+                  onChange={(e) =>
+                    addField("from", e?.toISOString().substring(0, 10))
+                  }
+                  oneTap
+                  format="dd/MM/yyyy"
+                  size="lg"
+                  block
+                />
+              </div>
             </div>
+
             <div className="flex-1">
-              <label
-                htmlFor="toDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                To Date
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                End Date
               </label>
-              <DatePicker
-                id="toDate"
-                value={new Date(query?.to)}
-                onChange={(e) => addField("to", e)}
-                block
-                size="lg"
-              />
+              <div className="relative">
+                <DatePicker
+                  className=""
+                  value={new Date(query?.to ?? new Date())}
+                  onChange={(e) =>
+                    addField("to", e?.toISOString().substring(0, 10))
+                  }
+                  oneTap
+                  format="dd/MM/yyyy"
+                  size="lg"
+                  block
+                />
+              </div>
             </div>
             <div className="flex items-end">
               <button
