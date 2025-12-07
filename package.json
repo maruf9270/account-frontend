@@ -22,7 +22,7 @@
     "dob-to-age": "^4.0.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.475.0",
-    "next": "15.1.7",
+    "next": "15.1.9",
     "next-auth": "^4.24.10",
     "omit-deep": "^0.3.0",
     "omit-empty-es": "^1.2.0",
